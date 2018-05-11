@@ -1,0 +1,20 @@
+{
+  "name": "new-japan-orders/maintenance",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "illuminate/support": "^5.6"
+  },  
+  "autoload": {
+    "psr-4": {
+      "NewJapanOrders\\Maintenance\\": "src/"
+    }   
+  },  
+  "extra": {
+    "laravel": {
+        "providers": [
+            "NewJapanOrders\\Maintenance\\ServiceProvider"
+        ]   
+    }   
+  }
+}
