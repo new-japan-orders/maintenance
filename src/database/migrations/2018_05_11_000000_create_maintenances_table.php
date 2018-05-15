@@ -16,7 +16,6 @@ class CreateMaintenancesTable extends Migration
         Schema::create('maintenances', function (Blueprint $table) {
             $table->increments('id');
             $table->dateTime('start_at');
-            $table->dateTime('finish_at')->nullable();
             $table->dateTime('finished_at')->nullable();
             $table->timestamps();
         });

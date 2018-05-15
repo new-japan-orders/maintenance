@@ -5,4 +5,4 @@ Route::get('/maintenances/create', 'NewJapanOrders\Maintenance\Controllers\Maint
 Route::post('/maintenances/store', 'NewJapanOrders\Maintenance\Controllers\MaintenanceController@store')->name('maintenances.store');
 Route::get('/maintenances/edit/{id}', 'NewJapanOrders\Maintenance\Controllers\MaintenanceController@edit')->name('maintenances.edit');
 Route::post('/maintenances/update/{id}', 'NewJapanOrders\Maintenance\Controllers\MaintenanceController@update')->name('maintenances.update');
-
+Route::get('/maintenances/finish/{id}', 'NewJapanOrders\Maintenance\Controllers\MaintenanceController@finish')->name('maintenances.finish');

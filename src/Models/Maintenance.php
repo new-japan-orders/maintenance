@@ -8,7 +8,7 @@ class Maintenance extends Model
 {
     //
     protected $fillable = [ 
-        'start_at', 'finish_at', 'finished_at',
+        'start_at', 'finished_at',
     ];
 
     public function scopeCurrent($query, $now=null)
@@ -18,10 +18,12 @@ class Maintenance extends Model
         }
         
         $ret = $query->whereNull('finished_at')
-                     ->orWhere(function($query) use ($now) {
-                        $query->where('start_at', '<=', $now)
-                              ->where('finish_at', '>=', $now);
-                    });
+                     ->where('start_at', '<=', $now);
         return $ret;
+    }
+
+    public function getStartTimeAttribute()
+    {
+        return strtotime($this->start_at);
     }
 }

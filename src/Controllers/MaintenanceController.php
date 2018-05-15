@@ -14,6 +14,10 @@ class MaintenanceController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
+    protected $index_view = 'maintenance::index';
+    protected $create_view = 'maintenance::create';
+    protected $edit_view = 'maintenance::edit';
+
     /**
      * Display a listing of the resource.
      *
@@ -22,7 +26,7 @@ class MaintenanceController extends BaseController
     public function index()
     {
         $maintenances = Maintenance::paginate();
-        return view('maintenance::index', compact('maintenances'));
+        return view($this->index_view, compact('maintenances'));
     }
 
     /**
@@ -32,7 +36,7 @@ class MaintenanceController extends BaseController
      */
     public function create()
     {
-        return view('maintenance::create');
+        return view($this->create_view);
     }
     /**
      * Store a newly created resource in storage.
@@ -43,10 +47,6 @@ class MaintenanceController extends BaseController
     {
         $inputs = $request->all();
         $inputs['start_at'] = DatetimeInput::combine($inputs['start_at']);
-        $inputs['finish_at'] = DatetimeInput::combine($inputs['finish_at']);
-        if (!empty($inputs['auto_finish'])) {
-            $inputs['finished_at'] = $inputs['finish_at']; 
-        }
         Maintenance::create($inputs);
 
         return redirect()->route('maintenances.index')->with('message', 'Item created successfully.');
@@ -62,9 +62,8 @@ class MaintenanceController extends BaseController
     {
         $maintenance = Maintenance::findOrFail($id);
         $start_at = DatetimeInput::separate($maintenance['start_at']);
-        $finish_at = DatetimeInput::separate($maintenance['finish_at']);
 
-        return view('maintenance::edit', compact('maintenance', 'start_at', 'finish_at'));
+        return view($this->edit_view, compact('maintenance', 'start_at', 'finish_at'));
     }
 
     /**
@@ -79,14 +78,15 @@ class MaintenanceController extends BaseController
 
         $maintenance = Maintenance::findOrFail($id);     
         $inputs['start_at'] = DatetimeInput::combine($inputs['start_at']);
-        $inputs['finish_at'] = DatetimeInput::combine($inputs['finish_at']);
-        if (empty($inputs['auto_finish'])) {
-            $inputs['finished_at'] = null;
-        } else {
-            $inputs['finished_at'] = $inputs['finish_at']; 
-        }
         $maintenance->update($inputs);
 
         return redirect()->route('maintenances.index')->with('message', 'Item updated successfully.');
+    }
+
+    public function finish($id)
+    {
+        $maintenance = Maintenance::findOrFail($id);
+        $maintenance->update(['finished_at' => date('Y-m-d H:i:s')]);
+        return redirect()->route('maintenances.index')->with('message', 'Item updated     successfully.');
     }
 }
