@@ -9,14 +9,15 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use NewJapanOrders\Maintenance\Models\Maintenance;
 use NewJapanOrders\Maintenance\DatetimeInput;
+use View;
 
 class MaintenanceController extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected $index_view = 'maintenance::index';
-    protected $create_view = 'maintenance::create';
-    protected $edit_view = 'maintenance::edit';
+    protected $index_view = 'maintenances.index';
+    protected $create_view = 'maintenances.create';
+    protected $edit_view = 'maintenances.edit';
 
     /**
      * Display a listing of the resource.
@@ -26,6 +27,9 @@ class MaintenanceController extends BaseController
     public function index()
     {
         $maintenances = Maintenance::paginate();
+        if (!View::exists($this->index_view)) {
+            $this->index_view = 'maintenance::index';
+        }
         return view($this->index_view, compact('maintenances'));
     }
 
@@ -36,8 +40,12 @@ class MaintenanceController extends BaseController
      */
     public function create()
     {
+        if (!View::exists($this->create_view)) {
+            $this->create_view = 'maintenance::create';
+        }
         return view($this->create_view);
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -63,6 +71,9 @@ class MaintenanceController extends BaseController
         $maintenance = Maintenance::findOrFail($id);
         $start_at = DatetimeInput::separate($maintenance['start_at']);
 
+        if (!View::exists($this->edit_view)) {
+            $this->edit_view = 'maintenance::edit';
+        }
         return view($this->edit_view, compact('maintenance', 'start_at', 'finish_at'));
     }
 
